@@ -1,0 +1,31 @@
+#!/usr/bin/python
+
+import sys
+from importlib.machinery import SourceFileLoader
+import os
+
+m = SourceFileLoader("__runpyInstance__", os.path.abspath(sys.argv[1])).load_module()
+ap = sys.argv[2].split('.')
+p = m
+for n in ap:
+    p = getattr(m, n)
+aa = []
+ka = {}
+ctx = None
+for w in sys.argv[3:]:
+    if w.startswith('-') :
+        ctx = w[1:]
+        continue
+    if ctx :
+        if ctx in ka:
+            if type(ka[ctx]) == list:
+                ka[ctx].append(w)
+            else:
+                ka[ctx] = [ka[ctx], w]
+        else:
+            ka[ctx] = w
+    else:        
+        aa.append(w)
+#print(aa)
+#print(ka)
+print(p(*aa, **ka))
